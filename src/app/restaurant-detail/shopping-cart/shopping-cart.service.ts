@@ -16,12 +16,9 @@ export class ShoppingCartService {
         }
     }
     removeItem(item:CartItem){
-        if(item.quantity > 1){
-             this.decreaseQty(item) 
-        }else{
-            this.items.splice(this.items.indexOf(item),1)
-        }
         
+            this.items.splice(this.items.indexOf(item),1)
+    
     }
 
     total(): number{
