@@ -7,8 +7,10 @@ import { Component, OnInit } from '@angular/core';
 export class OrderSummaryComponent implements OnInit {
 
   constructor() { }
-
+rated:boolean
   ngOnInit() {
   }
-
+rate(){
+  this.rated = true
+}
 }

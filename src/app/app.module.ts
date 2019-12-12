@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule , LOCALE_ID } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { RouterModule , PreloadAllModules} from '@angular/router';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
-
+import {LocationStrategy, HashLocationStrategy} from '@angular/common'
 import {ROUTES} from './app.routes'
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -17,10 +17,11 @@ import { MenuComponent } from './restaurant-detail/menu/menu.component';
 import { ShoppingCartComponent } from './restaurant-detail/shopping-cart/shopping-cart.component';
 import { MenuItemComponent } from './restaurant-detail/menu-item/menu-item.component';
 import { ReviewsComponent } from './restaurant-detail/reviews/reviews.component'
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { OrderSummaryComponent } from './order-summary/order-summary.component';
-import{SharedModule} from './shared/shared.module'
-import { CoreModule } from './core/core.module';
+import{SharedModule} from './shared/shared.module';
+import { NotFoundComponent } from './not-found/not-found.component'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,19 +35,21 @@ import { CoreModule } from './core/core.module';
     MenuItemComponent,
     ReviewsComponent,
     OrderSummaryComponent,
-
+    NotFoundComponent,
+    
     
   ],
   imports: [
     BrowserModule,
     HttpModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(ROUTES),
-    CoreModule ,
+    RouterModule.forRoot(ROUTES, {preloadingStrategy: PreloadAllModules}), 
     FormsModule,
-    SharedModule
+    SharedModule.forRoot(),
+    BrowserAnimationsModule
+    
   ],
-  providers: [  {provide: LOCALE_ID, useValue: 'pt-BR'}],
+  providers: [ {provide: LocationStrategy, useClass: HashLocationStrategy}, {provide: LOCALE_ID, useValue: 'pt-BR'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
