@@ -4,7 +4,12 @@ import { RestaurantService } from './restaurant.service';
 import {trigger, state, style, transition, animate} from '@angular/animations'
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms'
 import 'rxjs/add/operator/switchMap'
-Component({
+import 'rxjs/add/operator/debounceTime'
+import 'rxjs/add/operator/distinctUntilChanged'
+import 'rxjs/add/operator/catch'
+import 'rxjs/add/observable/from'
+import { Observable } from 'rxjs/Observable';
+@Component({
   selector: 'mt-restaurants',
   templateUrl: './restaurants.component.html',
   animations:[
@@ -26,27 +31,29 @@ Component({
   ]
 })
 export class RestaurantsComponent implements OnInit {
+  searchBarState = 'hidden'
+  restaurants: Restaurant[]
 
   searchForm: FormGroup
   searchControl: FormControl
   constructor(private restaurantService: RestaurantService,
-              private fb: FormBuilder) { }
-  restaurants: Restaurant[]
-  searchBarState = 'hidden'
+    private fb: FormBuilder) { }
   ngOnInit() {
-
     this.searchControl = this.fb.control('')
     this.searchForm = this.fb.group({
       searchControl: this.searchControl
     })
-    this.searchControl.valueChanges
-    .switchMap(searchTerm => this.restaurantService.restautants(searchTerm))
-    .subscribe(restaurants => this.restaurants = restaurants)
+    this.searchControl.valueChanges.debounceTime(500).distinctUntilChanged()
+    .switchMap(searchTerm => 
+      this.restaurantService.restautants(searchTerm)
+      .catch(error=>Observable.from([])))
+      .subscribe(restaurants => this.restaurants = restaurants)
     this.restaurantService.restautants()
     .subscribe(restaurants => this.restaurants = restaurants)
+    
   }
   toggleSearch(){
-    console.log('opa')
+    
     this.searchBarState = this.searchBarState === 'hidden' ? 'visible': 'hidden'
   }
 
