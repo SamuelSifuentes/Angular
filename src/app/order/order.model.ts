@@ -4,7 +4,8 @@ constructor(
     public number: number,
     public optionalAddress: string,
     public paymentOption: string,
-    public odrderItems: OrderItem[]
+    public odrderItems: OrderItem[],
+    public id?: string
 ){}
 }
 class OrderItem{
